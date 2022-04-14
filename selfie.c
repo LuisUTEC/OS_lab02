@@ -11592,9 +11592,7 @@ uint64_t selfie_run(uint64_t machine) {
   init_memory(atoi(peek_argument(0)));
 
   current_context = create_context(MY_CONTEXT, 0);
-
   // assert: number_of_remaining_arguments() > 0
-
   boot_loader(current_context);
 
   // current_context is ready to run
@@ -11830,7 +11828,13 @@ uint64_t exit_selfie(uint64_t exit_code, char* extras) {
 // selfie bootstraps int and char** to uint64_t and uint64_t*, respectively!
 int main(int argc, char** argv) {
   uint64_t exit_code;
-
+  uint64_t* contexto00 = (uint64_t*) 0;
+  uint64_t* contexto01 = (uint64_t*) 0;
+  create_context(contexto00,0);
+  create_context(contexto01,0);
+  set_next_context(contexto00,contexto01);
+  set_next_context(contexto01,contexto00);
+  mipster(contexto00);
   init_selfie((uint64_t) argc, (uint64_t*) argv);
 
   init_library();
@@ -11838,6 +11842,5 @@ int main(int argc, char** argv) {
   init_target();
 
   exit_code = selfie(0);
-
   return exit_selfie(exit_code, " [ ( -m | -d | -r | -y ) 0-4096 ... ]");
 }
